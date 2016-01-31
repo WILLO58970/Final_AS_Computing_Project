@@ -31,26 +31,27 @@ public class MainController {
 	//Date Formatter
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	//Main Menu Buttons
+	//Home Instatiations
 	@FXML
-	Button contactMenu,meetingMenu,closeMenu;
+	Button closeMenu;
 
-	//REMOVE Buttons once in meetingmenu method
-	Button mAdd,mRemove,mEdit,mSearch,mView,mSave,mClose;
-
-	//contactMenu Instantiations
+	/********contactMenu Instantiations*******/
 	TextField cID,cName,cNotes,cSearchInput;
 	TableView<StringContact> ctable;
 	Stage cWindow;
+	//contact_Viewer/Editor Instantiations
+	StringContact clastselected;
 	TextField ViewIDInput,ViewNameInput,ViewNotesInput;
-	//contactViewer/Editor Instantiations
-	StringContact newContact;
-	StringContact lastselected;
 
-	//meetingMenu Instantiations
-	TextField mID,mDate,mContSetString;
+
+	/********Meeting Instantiations*******/
+	TextField mID,mDate,mContSetString,mNotes,mSearchInput;
 	TableView<StringMeeting> mtable;
 	Stage mWindow;
+	//meeting_Viewer/Editor Instantiations
+	StringMeeting mlastselected;
+	TextField mViewIDInput,mViewNameInput,mViewNotesInput;
+	TableView<StringContact> mView_ctable;
 	/***************************************Plan***************************************/
 	public void Plan(){
 		/* Create Contact Menu
@@ -131,7 +132,6 @@ public class MainController {
 
 	/********************************Contact Menu Method*******************************/
 	public void contactMenu(ActionEvent event){
-
 		/*******TABLE COLUMNS*******/
 		//ID column
 		TableColumn<StringContact, Integer> IDColumn = new TableColumn<>("ID");
@@ -174,13 +174,17 @@ public class MainController {
 		Button cRemove = new Button("Remove");
 		cRemove.setOnAction(e -> cRemoveClicked());
 		//CVIEW/EDIT NEW WINDOW
-		Button cView = new Button("View/Edit");
+		Button cView = new Button("View");
 		cView.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				cEditViewClicked(lastselected);
+				cEditViewClicked(clastselected);
 			}
 		});
+		Button cEdit = new Button("Edit");
+		cEdit.setOnAction(e -> cEditClicked(clastselected));
+
+
 
 		/*******PROGRAM BUTTONS[See Plan() for info]*******/
 		//cSearch,cSave,cClose;
@@ -188,14 +192,19 @@ public class MainController {
 		cSearch.setOnAction(e -> cSearchClicked());
 
 		Button cSave = new Button("Save");
-		cSave.setOnAction(e -> cSaveClicked());
-		//sClose and the "X" Button do the same thing: Save to .txt then close the window
-		Button cClose = new Button("Close");
+		cSave.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				System.out.println("Saving...");
+				cSaveClicked();
+				System.out.println("Done!");
+			}});
+		//sClose and the "X" Button do the same thing except the "X" Save to .txt then close the window.
+		Button cClose = new Button("Close without saving");
 		cClose.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				//Closes
-				cSaveClicked();
 				cWindow.close();
 			}});
 
@@ -217,12 +226,12 @@ public class MainController {
 			/*System.out.println(oldValue + " Old");
 			System.out.println(observableValue + " Obs");
 			System.out.println(newValue + " New");*/
-			if (oldValue != null) {
-				lastselected = oldValue;
-				System.out.println(lastselected);
-			}else if(newValue != null) {
-				lastselected = newValue;
-				System.out.println(lastselected);
+			if (newValue != null) {
+				clastselected = newValue;
+				System.out.println(clastselected);
+			}else if(oldValue != null) {
+				clastselected = oldValue;
+				System.out.println(clastselected);
 			}
 		});
 
@@ -266,7 +275,151 @@ public class MainController {
 	}
 	/********************************Meeting Menu Methods*******************************/
 	public void meetingMenu(ActionEvent event){
+		/*******TABLE COLUMNS*******/
+		//ID column
+		TableColumn<StringMeeting, Integer> IDColumn = new TableColumn<>("ID");
+		IDColumn.setMinWidth(100);
+		IDColumn.setCellValueFactory(new PropertyValueFactory<>("iD"));
 
+		//Date column
+		TableColumn<StringMeeting, String> DateColumn = new TableColumn<>("Date Held");
+		DateColumn.setMinWidth(200);
+		DateColumn.setCellValueFactory(new PropertyValueFactory<>("Date Held"));
+
+		//Date column
+		TableColumn<StringMeeting, String> ContColumn = new TableColumn<>("Contacts Attending");
+		ContColumn.setMinWidth(200);
+		ContColumn.setCellValueFactory(new PropertyValueFactory<>("Contacts Attending"));
+
+		//Notes column
+		TableColumn<StringMeeting, String> notesColumn = new TableColumn<>("Notes");
+		notesColumn.setMinWidth(200);
+		notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+
+
+		/*******USER INPUT TEXTBOXES*******/
+		//Contact ID TextField
+		mID = new TextField();
+		mID.setPromptText("Meeting ID (Optional)");
+
+		//Contact Name TextField
+		mDate = new TextField();
+		mDate.setPromptText("Meeting Date");
+
+		//Contact Notes TextField
+		mContSetString = new TextField();
+		mContSetString.setPromptText("ContactID's split with a '/' with no spaces");
+
+		//Search Input TextField
+		mSearchInput = new TextField();
+		mSearchInput.setPromptText("Search For Meeting");
+		mSearchInput.setMinWidth(332);
+		/**********Buttons**********/
+		/*******ARRAYLIST CONTROLLING BUTTONS[See Plan() for info]*******/
+		//Button mAdd,mRemove,mEdit,mSearch,mView,mSave,mClose;
+		Button mAdd = new Button("Add");
+		mAdd.setOnAction(e -> mAddClicked());
+		Button mRemove = new Button("Remove");
+		mRemove.setOnAction(e -> mRemoveClicked());
+		//CVIEW/EDIT NEW WINDOW
+		Button mView = new Button("View Contacts Attending Meeting");
+		mView.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				mEditViewClicked(mlastselected);
+			}
+		});
+		Button mEdit = new Button("Edit");
+		mEdit.setOnAction(e -> mEditClicked(mlastselected));
+
+
+
+		/*******PROGRAM BUTTONS[See Plan() for info]*******/
+		//cSearch,cSave,cClose;
+		Button mSearch = new Button("Search");
+		mSearch.setOnAction(e -> mSearchClicked());
+
+		Button mSave = new Button("Save");
+		mSave.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				System.out.println("Saving...");
+				mSaveClicked();
+				System.out.println("Done!");
+			}});
+		//sClose and the "X" Button do the same thing except the "X" Save to .txt then close the window.
+		Button mClose = new Button("Close without saving");
+		mClose.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				//Closes
+				mWindow.close();
+			}});
+
+		/*******CWINDOW LAYOUT*******/
+		//Horizontal Box for Adding and Removing Contacts that goes at bottom of CWINDOW
+		HBox addRemoveHBox = new HBox();
+		addRemoveHBox.setPadding(new Insets(10,10,10,10));
+		addRemoveHBox.setSpacing(10);
+		addRemoveHBox.getChildren().addAll(mAdd,mRemove);
+
+		//Contact Table Instantiated
+		mtable = new TableView<>();
+		mtable.setItems(getMeetingsObsList());
+		mtable.getColumns().addAll(IDColumn, DateColumn,ContColumn, notesColumn);
+
+		//Last Selected Contact Listener
+		mtable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+			//Check whether item is selected and set value of selected item to Label
+			/*System.out.println(oldValue + " Old");
+			System.out.println(observableValue + " Obs");
+			System.out.println(newValue + " New");*/
+			if (newValue != null) {
+				mlastselected = newValue;
+				System.out.println(mlastselected);
+			}else if(oldValue != null) {
+				mlastselected = oldValue;
+				System.out.println(mlastselected);
+			}
+		});
+
+		//Top Bar for CWINDOW
+		HBox topBar = new HBox();
+		topBar.setPadding(new Insets(10,10,10,10));
+		topBar.setSpacing(10);
+		topBar.getChildren().addAll(mSearchInput,mSearch,mSave,mClose);
+
+		//Buttons on the right side
+		VBox sideButtons = new VBox();
+		sideButtons.setPadding(new Insets(10,10,10,10));
+		sideButtons.setSpacing(10);
+		sideButtons.getChildren().addAll(mView);
+
+		//Centre part of CWINDOW
+		HBox centreHBox = new HBox();
+		centreHBox.setPadding(new Insets(10,10,10,10));
+		centreHBox.setSpacing(10);
+		centreHBox.getChildren().addAll(mtable,sideButtons);
+
+
+		//Main Container for ContactMenu
+		VBox root = new VBox();
+		root.getChildren().addAll(topBar,centreHBox,addRemoveHBox);
+
+		/*******CWINDOW SHOW*******/
+		Scene scene = new Scene(root,400,400);
+		mWindow = new Stage();
+		mWindow.setTitle("Meeting Menu");
+		mWindow.setScene(scene);
+		mWindow.show();
+		//When the "X" Button is pressed 
+		mWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent actionEvent) {
+				mSaveClicked();
+				mWindow.close();
+			}
+		});
 	}
 	/****************************Contact Menu Button Methods****************************/
 	public void cAddClicked(){
@@ -286,25 +439,37 @@ public class MainController {
 		}else{
 			System.err.println("Please Fill in the [Name] and [Notes] boxes");
 		}
+		cID.clear();
+		cName.clear();
+		cNotes.clear();
 	}
-	public void cRemoveClicked(){}
+	public void cRemoveClicked(){
+		StringContact StringContactselected;
+		ObservableList<StringContact> allContacts;
+		allContacts = ctable.getItems();
+		StringContactselected = ctable.getSelectionModel().getSelectedItem();
+		allContacts.remove(StringContactselected);
+		allContacts.remove(null);
+		ctable.setItems(allContacts);
+	}
 	public void cSearchClicked(){}
 	public void cSaveClicked(){
-		System.out.println("Saving...");
 		try {
 			new PrintWriter("Contacts.txt").close();
+			ObservableList<StringContact> ALLContacts = ctable.getItems();
 			BufferedWriter writer = new BufferedWriter(new FileWriter("Contacts.txt", true));
-			for(StringContact x:ctable.getItems()){
-				writer.write((x).getID()+",");
-				writer.write((x).getName()+",");
-				writer.write((x).getNotes()+",\n");
+			for(int i = 0;i<ctable.getItems().size();i++){
+				if(ALLContacts.get(i)!=null && ALLContacts.get(i).getName()!= null){
+					writer.write(ALLContacts.get(i).getID()+",");
+					writer.write(ALLContacts.get(i).getName()+",");
+					writer.write(ALLContacts.get(i).getNotes()+",\n");
+				}
 			}
 			writer.close();
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
-		System.out.println("Done!");
 	}
 	public StringContact cEditViewClicked(StringContact lastselect){
 		Stage stage = new Stage();
@@ -372,7 +537,8 @@ public class MainController {
 		cViewer_SaveandExit.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				cEditView_SaveClicked();
+				cEditView_SaveClicked(lastselect);
+
 				stage.close();
 			}});
 
@@ -390,14 +556,28 @@ public class MainController {
 		return lastselect;
 
 	}
-	/***************************Contact Viewer Button Methods***************************/
+	public void cEditClicked(StringContact lastselect){
+		ObservableList<StringContact>allcont = ctable.getItems();
+		cID.setText(lastselect.getID()+"");
+		cID.setText(lastselect.getID()+"");
+		cID.setText(lastselect.getID()+"");
+		allcont.remove(lastselect);
+	}
 
-	public void cEditView_SaveClicked(){
-		
+	/****************************Meeting Menu Button Methods****************************/
+	public void mAddClicked(){}
+	public void mRemoveClicked(){}
+	public void mEditClicked(StringMeeting mlastselect){}
+	public void mSearchClicked(){}
+	public void mEditViewClicked(StringMeeting lastselect){}
+	public void mSaveClicked(){}
+	public void mCloseClicked(){}
+
+	public void cEditView_SaveClicked(StringContact lastselecte){
+		StringContact newContact = new StringContact();
 		if(ViewNameInput.getText().isEmpty()==false && ViewNotesInput.getText().isEmpty()==false){
-			StringContact newContact = new StringContact();
 			if(ViewIDInput.getText().isEmpty()){
-				newContact.setID(lastselected.getID());
+				newContact.setID(clastselected.getID());
 			}else{
 				newContact.setID(Integer.parseInt(ViewIDInput.getText()));
 			}
@@ -405,24 +585,28 @@ public class MainController {
 			newContact.setNotes(ViewNotesInput.getText() + "");
 			//Add Contact to table
 			cRemoveClicked();
+			ctable.getItems().remove(null);
 			ctable.getItems().add(newContact);
-			
+			ctable.refresh();
+			//Duplication Checker a
 		}else{
 			System.err.println("Please Fill in the [Name] and [Notes] boxes");
 		}
 		/***********************************************************************/
-		ctable.getItems().remove(lastselected);
+		ctable.getItems().remove(lastselecte);
 		ctable.getItems().add(newContact);
+	};
+	public void cDupplicationChecker(){
+		for(StringContact contempcheck1:ctable.getItems()){
+			for(StringContact contempcheck2:ctable.getItems()){
+				if(contempcheck1==contempcheck2){
 
+				}
+
+			}
+		}
 	}
-	/****************************Meeting Menu Button Methods****************************/
-	public void mAddClicked(){}
-	public void mRemoveClicked(){}
-	public void mEditClicked(){}
-	public void mSearchClicked(){}
-	public void mViewClicked(){}
-	public void mSaveClicked(){}
-	public void mCloseClicked(){}
+
 	/*********************************Conversion Methods*********************************/
 	public int[] StringtoArray(String StringIDs){
 		String[] StringIds = StringIDs.split("/");
