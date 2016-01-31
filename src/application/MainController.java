@@ -106,7 +106,9 @@ public class MainController {
 		return ALLStringContacts;
 	}
 	public ObservableList<StringMeeting> getMeetingsObsList(){
+		//ALLString Meetings = All the objects in .txt
 		ObservableList<StringMeeting>ALLStringMeetings = FXCollections.observableArrayList();
+
 		String lineText = null;
 		try{
 			LineNumberReader lineReader = new LineNumberReader(new FileReader("Meetings.txt"));
@@ -115,13 +117,27 @@ public class MainController {
 
 				String[] splited = lineText.split(",");
 
-				ALLStringMeetings.add(new StringMeeting(Integer.parseInt(splited[0]),splited[1],splited[2]));
+				int ID = Integer.parseInt(splited[0]);
+				String Date = splited[1];
+				String ContSetString = splited[2];
+				if(splited.length ==3){
+					ALLStringMeetings.add(new StringMeeting(ID,Date,ContSetString,""));
+				}else{
+					ALLStringMeetings.add(new StringMeeting(ID,Date,ContSetString,splited[3]));
+				}
+				ALLStringMeetings.remove(null);
+				for(StringMeeting temp: ALLStringMeetings){
+					if(temp.getContSetString()==null){
+						ALLStringMeetings.remove(temp);
+					}
+				}
 			}
 			lineReader.close();
 		}
 		catch(IOException e){
 			System.err.println(e);
 		}
+		
 		return ALLStringMeetings;
 	}
 	/********************************Main Menu Methods*******************************/
@@ -310,10 +326,15 @@ public class MainController {
 		mContSetString = new TextField();
 		mContSetString.setPromptText("ContactID's split with a '/' with no spaces");
 
+		//Contact Notes TextField
+		mNotes = new TextField();
+		mNotes.setPromptText("Notes");
+
 		//Search Input TextField
 		mSearchInput = new TextField();
 		mSearchInput.setPromptText("Search For Meeting");
 		mSearchInput.setMinWidth(332);
+
 		/**********Buttons**********/
 		/*******ARRAYLIST CONTROLLING BUTTONS[See Plan() for info]*******/
 		//Button mAdd,mRemove,mEdit,mSearch,mView,mSave,mClose;
@@ -321,7 +342,7 @@ public class MainController {
 		mAdd.setOnAction(e -> mAddClicked());
 		Button mRemove = new Button("Remove");
 		mRemove.setOnAction(e -> mRemoveClicked());
-		//CVIEW/EDIT NEW WINDOW
+		//MVIEW/EDIT NEW WINDOW
 		Button mView = new Button("View Contacts Attending Meeting");
 		mView.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -329,6 +350,7 @@ public class MainController {
 				mEditViewClicked(mlastselected);
 			}
 		});
+		/**************************Move to better place****************/
 		Button mEdit = new Button("Edit");
 		mEdit.setOnAction(e -> mEditClicked(mlastselected));
 
@@ -361,7 +383,7 @@ public class MainController {
 		HBox addRemoveHBox = new HBox();
 		addRemoveHBox.setPadding(new Insets(10,10,10,10));
 		addRemoveHBox.setSpacing(10);
-		addRemoveHBox.getChildren().addAll(mAdd,mRemove);
+		addRemoveHBox.getChildren().addAll(mID,mDate,mContSetString,mNotes,mAdd,mRemove);
 
 		//Contact Table Instantiated
 		mtable = new TableView<>();
@@ -370,10 +392,6 @@ public class MainController {
 
 		//Last Selected Contact Listener
 		mtable.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-			//Check whether item is selected and set value of selected item to Label
-			/*System.out.println(oldValue + " Old");
-			System.out.println(observableValue + " Obs");
-			System.out.println(newValue + " New");*/
 			if (newValue != null) {
 				mlastselected = newValue;
 				System.out.println(mlastselected);
@@ -407,7 +425,7 @@ public class MainController {
 		root.getChildren().addAll(topBar,centreHBox,addRemoveHBox);
 
 		/*******CWINDOW SHOW*******/
-		Scene scene = new Scene(root,400,400);
+		Scene scene = new Scene(root);
 		mWindow = new Stage();
 		mWindow.setTitle("Meeting Menu");
 		mWindow.setScene(scene);
