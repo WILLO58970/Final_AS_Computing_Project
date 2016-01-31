@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+   <children>
+      <Label layoutX="195.0" layoutY="19.0" text="Home">
+         <font>
+            <Font size="78.0" />
+         </font>
+      </Label>
+      <GridPane alignment="CENTER" layoutX="50.0" layoutY="132.0" pickOnBounds="false">
+        <columnConstraints>
+          <ColumnConstraints fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+          <ColumnConstraints fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="150.0" prefHeight="150.0" />
+        </rowConstraints>
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="102.0" prefWidth="200.0" text="Meetings Menu" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="20.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#contactMenu" prefHeight="102.0" prefWidth="200.0" text="Contacts Menu" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="20.0" />
+               </font></Button>
+         </children>
+      </GridPane>
+      <Button fx:id="closeMenu" layoutX="253.0" layoutY="282.0" mnemonicParsing="false" onAction="#closeMenu" prefHeight="50.0" prefWidth="94.0" text="Close">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
