@@ -28,6 +28,9 @@ public class StringMeeting{
 		this.setContSetString(ContSetString);
 	}
 
+	public StringMeeting() {
+	}
+
 	/** @return the ID */
 	public int getID() {
 		return ID;
