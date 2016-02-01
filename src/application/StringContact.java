@@ -8,12 +8,18 @@ public class StringContact{
 	private String Notes;
 
 	public StringContact(){
-		this.ID = 6;
+		this.ID = 0;
 		this.Name = "";
 		this.Notes = "";
 	}
 
 	public StringContact(int ID, String Name, String Notes) {
+		this.ID = ID;
+		this.Name = Name;
+		this.Notes = Notes;
+	}
+
+	public StringContact(StringContact stringContact) {
 		this.ID = ID;
 		this.Name = Name;
 		this.Notes = Notes;

@@ -258,7 +258,7 @@ public class MainController {
 				cSaveClicked();
 				System.out.println("Done!");
 			}});
-		//sClose and the "X" Button do the same thing except the "X" Save to .txt then close the window.
+		//sClose and the "X" Button DON'T DO the same thing the "X" Doesn't save only closes, the "Close" button saves to .txt then close the window.
 		Button cClose = new Button("Close without saving");
 		cClose.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -510,7 +510,6 @@ public class MainController {
 		ctable.setItems(allContacts);
 	}
 	public ObservableList<StringContact> cSearchClicked(){
-		int j =0;
 		ObservableList<StringContact> AllContacts = getContactsObsList();
 		ObservableList<StringContact> SelectContacts = FXCollections.observableArrayList();
 		for (StringContact g : AllContacts){
@@ -527,8 +526,6 @@ public class MainController {
 		}
 		return SelectContacts;
 	}	
-
-
 	public void cSaveClicked(){
 		try {
 
@@ -642,11 +639,9 @@ public class MainController {
 
 	}
 	public void cEditClicked(StringContact lastselect){
-		ObservableList<StringContact>allcont = ctable.getItems();
 		cID.setText(lastselect.getID()+"");
-		cID.setText(lastselect.getID()+"");
-		cID.setText(lastselect.getID()+"");
-		allcont.remove(lastselect);
+		cName.setText(lastselect.getName()+"");
+		cNotes.setText(lastselect.getNotes()+"");
 	}
 	//Contact Viewer Button Methods
 	public void cEditView_SaveClicked(StringContact lastselecte){
@@ -722,34 +717,34 @@ public class MainController {
 		public void mEditViewClicked(StringMeeting lastselect){
 			/*******TABLE COLUMNS*******/
 			//ID column
-			TableColumn<StringContact, Integer> IDColumn = new TableColumn<>("ID");
-			IDColumn.setMinWidth(100);
-			IDColumn.setCellValueFactory(new PropertyValueFactory<>("iD"));
+			TableColumn<StringContact, Integer> IDColumn_a = new TableColumn<>("ID");
+			IDColumn_a.setMinWidth(100);
+			IDColumn_a.setCellValueFactory(new PropertyValueFactory<>("iD"));
 
 			//Name column
-			TableColumn<StringContact, String> nameColumn = new TableColumn<>("Name");
-			nameColumn.setMinWidth(200);
-			nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+			TableColumn<StringContact, String> nameColumn_a = new TableColumn<>("Name");
+			nameColumn_a.setMinWidth(200);
+			nameColumn_a.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 			//Notes column
-			TableColumn<StringContact, String> notesColumn = new TableColumn<>("Notes");
-			notesColumn.setMinWidth(200);
-			notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+			TableColumn<StringContact, String> notesColumn_a = new TableColumn<>("Notes");
+			notesColumn_a.setMinWidth(200);
+			notesColumn_a.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
-			//ID column
-			TableColumn<StringContact, Integer> IDColumn1 = new TableColumn<>("ID");
-			IDColumn1.setMinWidth(100);
-			IDColumn1.setCellValueFactory(new PropertyValueFactory<>("iD"));
+			//ID column SELECTED
+			TableColumn<StringContact, Integer> IDColumn_s = new TableColumn<>("ID");
+			IDColumn_s.setMinWidth(100);
+			IDColumn_s.setCellValueFactory(new PropertyValueFactory<>("iD"));
 
-			//Name column
-			TableColumn<StringContact, String> nameColumn1 = new TableColumn<>("Name");
-			nameColumn1.setMinWidth(200);
-			nameColumn1.setCellValueFactory(new PropertyValueFactory<>("name"));
+			//Name column SELECTED
+			TableColumn<StringContact, String> nameColumn_s = new TableColumn<>("Name");
+			nameColumn_s.setMinWidth(200);
+			nameColumn_s.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-			//Notes column
-			TableColumn<StringContact, String> notesColumn1 = new TableColumn<>("Notes");
-			notesColumn1.setMinWidth(200);
-			notesColumn1.setCellValueFactory(new PropertyValueFactory<>("notes"));
+			//Notes column SELECTED
+			TableColumn<StringContact, String> notesColumn_s = new TableColumn<>("Notes");
+			notesColumn_s.setMinWidth(200);
+			notesColumn_s.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
 
 
@@ -768,7 +763,7 @@ public class MainController {
 			cAdd.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent actionEvent) {
-					mView_ctable_s.getItems().add(mView_Contact_s);
+					mView_ctable_s.getItems().add(mView_Contact_a);
 				}
 			});
 			Button cRemove = new Button("Remove");
@@ -787,17 +782,8 @@ public class MainController {
 			Button cSearch = new Button("Search");
 			cSearch.setOnAction(e -> cSearchClicked());
 
-
-			Button cSave = new Button("Save");
-			cSave.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					System.out.println("Saving...");
-					mSaveClicked();
-					System.out.println("Done!");
-				}});
-			//sClose and the "X" Button do the same thing except the "X" Save to .txt then close the window.
-			Button cClose = new Button("Close - Doesn't Save");
+			//sClose and the "X" Button DON'T do the same thing except the "X" Save to .txt then close the window.
+			Button cClose = new Button("Save and Exit");
 			cClose.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent actionEvent) {
@@ -812,15 +798,16 @@ public class MainController {
 			addRemoveHBox.setSpacing(10);
 			addRemoveHBox.getChildren().addAll(cAdd,cRemove);
 
-			//ALL Contact Table Instantiated
-			mView_ctable_a = new TableView<>();
-			mView_ctable_a.setItems(getContactsObsList());
-			mView_ctable_a.getColumns().addAll(IDColumn1, nameColumn1, notesColumn1);
 			//Selected Contact Table Instantiated
 			mView_ctable_s = new TableView<>();
 			mView_ctable_s.setItems(getStringContacts(StringtoArray(lastselect.getContSetString())));
-			mView_ctable_s.getColumns().addAll(IDColumn1, nameColumn1, notesColumn1);
+			mView_ctable_s.getColumns().addAll(IDColumn_s, nameColumn_s, notesColumn_s);
+			//ALL Contact Table Instantiated
+			mView_ctable_a = new TableView<>();
+			mView_ctable_a.setItems(getContactsObsList());
+			//Removes SELECTED contacts from ALLCONTACTS
 
+			mView_ctable_a.getColumns().addAll(IDColumn_a, nameColumn_a, notesColumn_a);
 			//Selected Contact Listener (mView_Contact_s;)
 			mView_ctable_s.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 				if (newValue != null) {
@@ -842,47 +829,45 @@ public class MainController {
 				}
 			});
 
-			//Top Bar for CWINDOW
+			//Top Bar for MWINDOW
 			HBox topBar = new HBox();
 			topBar.setPadding(new Insets(10,10,10,10));
 			topBar.setSpacing(10);
-			topBar.getChildren().addAll(cSearchInput,cSearch,cSave,cClose);
-			mView_ctable_a.setItems(getContactsObsList());
+			topBar.getChildren().addAll(cSearchInput,cSearch,cClose);
 			//ADD Label,Add,Button
-			Label cSelect = new Label("Contacts Attending Meeting: ");
+			Label cAll = new Label("All Contacts: ");
 			VBox AllContBody = new VBox();
 			AllContBody.setPadding(new Insets(10,10,10,10));
 			AllContBody.setSpacing(10);
-			AllContBody.getChildren().addAll(cSelect,cAdd,mView_ctable_a);
+			AllContBody.getChildren().addAll(cAll,cAdd,mView_ctable_a);
 
-			Label cAll = new Label("All Contacts: ");
+			Label cSelect = new Label("Contacts Attending Meeting: ");
 			VBox SelectContBody = new VBox();
 			SelectContBody.setPadding(new Insets(10,10,10,10));
 			SelectContBody.setSpacing(10);
-			SelectContBody.getChildren().addAll(cAll,cRemove,mView_ctable_s);
+			SelectContBody.getChildren().addAll(cSelect,cRemove,mView_ctable_s);
 
-			//Centre part of CWINDOW
+			//Centre part of MWINDOW
 			HBox centreHBox = new HBox();
 			centreHBox.setPadding(new Insets(10,10,10,10));
 			centreHBox.setSpacing(10);
 			centreHBox.getChildren().addAll(AllContBody,SelectContBody);
 
 
-			//Main Container for ContactMenu
+			//Main Container for MeetingMenu
 			VBox root = new VBox();
 			root.getChildren().addAll(topBar,centreHBox);
 
 			/*******CWINDOW SHOW*******/
 			Scene scene = new Scene(root);
 			mViewWindow = new Stage();
-			mViewWindow.setTitle("Contact Menu");
+			mViewWindow.setTitle("Meeting - Viewer");
 			mViewWindow.setScene(scene);
 			mViewWindow.show();
-			//When the "X" Button is pressed 
+			//When the "X" Button is clicked saves and closes
 			mViewWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent actionEvent) {
-					mViewSaveClicked();
 					mViewWindow.close();
 				}
 			});
@@ -915,7 +900,17 @@ public class MainController {
 				e.printStackTrace();
 			}
 		}
-		public void mViewSaveClicked(){}
+		public void mViewSaveClicked(){
+			//TODO: get last selected meeting, set cont string
+			for(int i = 0;i<mtable.getItems().size();i++){
+				if(mtable.getItems().get(i).equals(mlastselected)){
+					System.err.println("removed meeting for index: " +i);
+					mtable.getItems().set(i, mlastselected);
+					mtable.refresh();
+				}
+			}
+			
+		}
 		public void mCloseClicked(){}
 		/*********************************Conversion Methods*********************************/
 		public int[] StringtoArray(String StringIDs){
@@ -939,6 +934,7 @@ public class MainController {
 			}
 			return tempContacts;
 		}
+		//Input Validation to check if string is an Integer
 		public static boolean isInteger(String s) {
 			try { 
 				Integer.parseInt(s); 
@@ -947,5 +943,13 @@ public class MainController {
 			}
 			return true;
 		}
-
+		//finds index of SELECTED Meeting in ALLMEETINGS
+		public Integer indexfinder(StringMeeting lastselect){
+			for(int i = 0; i<getMeetingsObsList().size();i++){
+				if(getMeetingsObsList().get(i).equals(lastselect)){
+					return i;
+				}
+			}
+			return null;
+		}
 }
