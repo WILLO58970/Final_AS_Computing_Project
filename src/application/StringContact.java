@@ -19,11 +19,6 @@ public class StringContact{
 		this.Notes = Notes;
 	}
 
-	public StringContact(StringContact stringContact) {
-		this.ID = ID;
-		this.Name = Name;
-		this.Notes = Notes;
-	}
 
 	public int getID() {
 		return ID;
