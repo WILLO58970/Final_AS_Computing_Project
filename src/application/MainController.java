@@ -8,7 +8,6 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 
 import javafx.collections.FXCollections;
@@ -235,6 +234,7 @@ public class MainController {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				//Closes
+				cSaveClicked();
 				cWindow.close();
 			}});
 
